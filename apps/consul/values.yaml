@@ -1,0 +1,49 @@
+global:
+  enabled: true
+  image: "jamiewri/consul-python:1.10.1"
+  name: consul
+  datacenter: devopstower
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: "1m"
+
+server:
+  replicas: 1
+
+ui:
+  service:
+    type: LoadBalancer
+
+dns:
+  enabled: true
+
+connectInject:
+  enabled: true
+  default: true
+
+controller:
+  enabled: true
+
+ingressGateways:
+  enabled: true
+  defaults:
+    replicas: 1
+    #affinity: null
+      #podAntiAffinity:
+      #  preferredDuringSchedulingIgnoredDuringExecution:
+      #    - labelSelector:
+      #        matchLabels:
+      #          app: {{ template "consul.name" . }}
+      #          release: "{{ .Release.Name }}"
+      #          component: ingress-gateway
+      #      topologyKey: kubernetes.io/hostname
+
+  gateways:
+    - name: ingress-gateway
+      service:
+        type: LoadBalancer
+        ports:
+          - port: 5000
+
+

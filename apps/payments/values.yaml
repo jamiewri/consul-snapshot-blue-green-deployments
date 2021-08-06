@@ -1,0 +1,7 @@
+namespace: default
+
+deployment:
+  replicas: 3
+  revisionHistoryLimit: 1
+  image: jamiewri/nginx-build
+  tag: latest

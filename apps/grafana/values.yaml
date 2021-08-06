@@ -1,0 +1,64 @@
+adminUser: jamie
+adminPassword: hashi123
+
+rbac:
+  create: false
+  pspEnabled: false
+
+# Disable test pods
+testFramework:
+  enabled: false
+
+podLabels:
+  app: grafana
+
+podAnnotations:
+  "consul.hashicorp.com/connect-inject": "false"
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+
+persistence:
+  enabled: true
+
+# Configure the prometheus data source. We expect prometheus:9090 in the same namespace.
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        orgId: 1
+        url: prometheus-server.default.svc.cluster.local
+        access: proxy
+        isDefault: true
+        jsonData:
+          timeInterval: 5s
+        editable: true
+
+#sidecar:
+#  dashboards:
+#    enabled: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /var/lib/grafana/dashboards/default
+
+
+dashboards:
+  default:
+    hashicups-dashboard:
+      file: dashboards/hashicups-dashboard.json
+    #consul-server-monitoring_rev3:
+    #  file: "dashboards/consul-server-monitoring_rev3.json"

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-data-web
+  namespace: "{{ .Values.namespace }}"
+  annotations:
+    "helm.sh/hook": pre-install
+data:
+  index.html: |
+    Home Page - Served to you from our Kubernetes Cluster
