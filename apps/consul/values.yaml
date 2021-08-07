@@ -11,10 +11,10 @@ global:
 server:
   replicas: 1
 
-syncCatalog:
-  enabled: true
-  toConsul: true
-  toK8S: false
+#syncCatalog:
+#  enabled: true
+#  toConsul: true
+#  toK8S: false
 
 ui:
   service:

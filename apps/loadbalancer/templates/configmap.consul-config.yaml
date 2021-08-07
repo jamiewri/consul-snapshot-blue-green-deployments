@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: consul-config-loadbalancer
+  name: "{{ .Values.appName }}-consul-config"
   namespace: "{{ .Values.namespace }}"
   annotations:
     "helm.sh/hook": pre-install

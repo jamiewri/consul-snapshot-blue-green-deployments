@@ -1,7 +1,14 @@
-namespace: customer1
+namespace: default
+
+appName: loadbalancer
 
 deployment:
   replicas: 1
   revisionHistoryLimit: 1
-  image: nginx
-  tag: latest
+  image: jamiewri/nginx-build
+  tag: "v1"
+
+reloader:
+  image: jamiewri/nginx-reloader
+  tag: "v1"
+

@@ -6,6 +6,10 @@ case $1 in
     kubectl create -f ./apps/consul/service.consul-dns-internal.yaml
     kubectl create -f ./apps/consul/service.consul-server-internal.yaml
     kubectl create -f ./apps/consul/service.consul-server-external.yaml
+    kubectl apply -f ./apps/consul/servicedefaults.payments.yaml
+    kubectl apply -f ./apps/consul/serviceintentions.loadbalancer.yaml
+    kubectl apply -f ./apps/consul/servicedefaults.loadbalancer.yaml
+
   ;;
 
   consul-upgrade)
@@ -43,6 +47,14 @@ EOF
   payments-upgrade)
     helm upgrade -f ./apps/payments/values.yaml payments ./apps/payments 
   ;;
+
+  loadbalancer)
+     helm install -f ./apps/loadbalancer/values.yaml loadbalancer ./apps/loadbalancer --wait
+  ;;
+
+  loadbalancer-upgrade)
+    helm upgrade -f ./apps/loadbalancer/values.yaml loadbalancer ./apps/loadbalancer
+;;
 
 esac
 

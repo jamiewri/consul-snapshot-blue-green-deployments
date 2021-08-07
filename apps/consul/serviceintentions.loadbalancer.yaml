@@ -1,0 +1,11 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: loadbalancer
+spec:
+  destination:
+    name: payments
+  sources:
+    - name: loadbalancer
+      action: allow

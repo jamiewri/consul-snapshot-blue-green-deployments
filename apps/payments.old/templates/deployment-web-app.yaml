@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}"
+  namespace: "{{ .Values.namespace }}"
+  labels:
+    app: "{{ .Values.appName }}"
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.appName }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.appName }}"
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.nginx-config.yaml") . | sha256sum }}
+        checksum/data: {{ include (print $.Template.BasePath "/configmap.nginx-data.yaml") . | sha256sum }}
+        "consul.hashicorp.com/connect-inject": "true"
+    spec:
+      shareProcessNamespace: true
+      containers:
+      - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: etc-nginx
+          mountPath: /etc/nginx
+        - name: var-cache-nginx
+          mountPath: /var/cache/nginx
+        - name: var-log-nginx
+          mountPath: /var/log/nginx
+        - name: tmp
+          mountPath: /tmp
+        - name: www-html
+          mountPath: /www/html/index.html
+          subPath: index.html
+        securityContext:
+          capabilities:
+            add:
+            - SYS_PTRACE
+#      - image: "{{ .Values.reloader.image }}:{{ .Values.reloader.tag }}"
+#        imagePullPolicy: Always
+#        name: nginx-reloader
+#        env:
+#        - name: CONFIG
+#          value: "/app/consul-template.hcl"
+#        - name: LOG_LEVEL
+#          value: debug
+#        securityContext:
+#          capabilities:
+#            add:
+#            - SYS_PTRACE
+#        volumeMounts:
+#        - name: consul-config
+#          mountPath: /app
+#        - name: etc-nginx
+#          mountPath: /etc/nginx
+#        - name: tmp
+#          mountPath: /tmp
+#      initContainers:
+#      - image: "{{ .Values.reloader.image }}:{{ .Values.reloader.tag }}"
+#        imagePullPolicy: Always
+#        name: consul-init
+#        env:
+#        - name: CONFIG
+#          value: "/app/consul-template.hcl"
+#        - name: LOG_LEVEL
+#          value: debug
+#        - name: EXTRA_ARGS
+#          value: "-once"
+#        volumeMounts:
+#        - name: consul-config
+#          mountPath: /app
+#        - name: etc-nginx
+#          mountPath: /etc/nginx
+#        - name: tmp
+#          mountPath: /tmp
+      serviceAccountName: "{{ .Values.appName }}"
+      volumes:
+      - name: etc-nginx
+        emptyDir: {}
+      - name: var-cache-nginx
+        emptyDir: {}
+      - name: var-log-nginx
+        emptyDir: {}
+      - name: www-html
+        configMap:
+          name: "{{ .Values.appName }}-nginx-data"
+      - name: tmp
+        emptyDir: {}
+      - name: consul-config
+        configMap:
+          name: consul-config-web

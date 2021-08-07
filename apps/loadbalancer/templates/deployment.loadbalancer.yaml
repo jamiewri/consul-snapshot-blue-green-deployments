@@ -2,29 +2,31 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: loadbalancer
-  name: loadbalancer
+    app: "{{ .Values.appName }}"
+  name: "{{ .Values.appName }}"
   namespace: "{{ .Values.namespace }}"
 spec:
   replicas: {{ .Values.deployment.replicas }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   selector:
     matchLabels:
-      app: loadbalancer
+      app: "{{ .Values.appName }}"
   template:
     metadata:
       labels:
-        app: loadbalancer
+        app: "{{ .Values.appName }}"
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.consul-config.yaml") . | sha256sum }}
         "consul.hashicorp.com/connect-inject": "true"
-        "vault.hashicorp.com/role": "loadbalancer"
-        "vault.hashicorp.com/agent-inject": "true"
-        "vault.hashicorp.com/agent-inject-secret-config.txt": "devopstower/web-app/config"
-        "vault.hashicorp.com/agent-inject-template-config.txt": |
-          {{printf "{{- with secret "}} "devopstower/web-app/config" {{ ` -}} 
-          {{ .Data.data.username }}
-          {{- end }} `}}
+        "consul.hashicorp.com/transparent-proxy-exclude-inbound-ports": "9000"
+        "consul.hashicorp.com/connect-service": "loadbalancer-external"
+       # "vault.hashicorp.com/role": "loadbalancer"
+       # "vault.hashicorp.com/agent-inject": "true"
+       # "vault.hashicorp.com/agent-inject-secret-config.txt": "devopstower/web-app/config"
+       # "vault.hashicorp.com/agent-inject-template-config.txt": |
+       #   {{printf "{{- with secret "}} "devopstower/web-app/config" {{ ` -}} 
+       #   {{ .Data.data.username }}
+       #   {{- end }} `}}
     spec:
       shareProcessNamespace: true
       containers:
@@ -49,7 +51,7 @@ spec:
           capabilities:
             add:
             - SYS_PTRACE
-      - image: "rhquay-1001.devopstower.local/admin/nginx-reloader:v0.2"
+      - image: "{{ .Values.reloader.image }}:{{ .Values.reloader.tag }}"
         imagePullPolicy: Always
         name: nginx-reloader
         env:
@@ -69,7 +71,7 @@ spec:
         - name: tmp
           mountPath: /tmp
       initContainers:
-      - image: "rhquay-1001.devopstower.local/admin/nginx-reloader:v0.2"
+      - image: "{{ .Values.reloader.image }}:{{ .Values.reloader.tag }}"
         imagePullPolicy: Always
         name: consul-init
         env:
@@ -86,14 +88,14 @@ spec:
           mountPath: /etc/nginx
         - name: tmp
           mountPath: /tmp
-      serviceAccountName: loadbalancer
+      serviceAccountName: "{{ .Values.appName }}"
       dnsPolicy: ClusterFirst
       volumes:
       - name: etc-nginx
         emptyDir: {}
       - name: consul-config
         configMap:
-          name: consul-config-loadbalancer
+          name: "{{ .Values.appName }}-consul-config"
       - name: var-cache-nginx
         emptyDir: {}
       - name: var-log-nginx
