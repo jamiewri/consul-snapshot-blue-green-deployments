@@ -3,12 +3,12 @@ namespace: default
 appName: payments
 
 deployment:
-  replicas: 5
+  replicas: 2
   revisionHistoryLimit: 1
 #  image: jamiewri/nginx-build
 #  tag: v1
   image: jamiewri/payments
-  tag: 2
+  tag: 1
 
 reloader:
   image: jamiewri/nginx-reloader

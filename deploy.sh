@@ -54,7 +54,12 @@ EOF
 
   loadbalancer-upgrade)
     helm upgrade -f ./apps/loadbalancer/values.yaml loadbalancer ./apps/loadbalancer
-;;
+  ;;
+
+  monitoring)
+    helm install -f ./apps/prometheus/values.yaml prometheus prometheus-community/prometheus --version "14.0.0" --wait
+    helm install -f ./apps/grafana/values.yaml grafana grafana/grafana --version "6.9.1" --wait
+  ;;
 
 esac
 

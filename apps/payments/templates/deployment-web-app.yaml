@@ -17,6 +17,7 @@ spec:
         app: "{{ .Values.appName }}"
       annotations:
         "consul.hashicorp.com/connect-inject": "true"
+        "consul.hashicorp.com/connect-service": "payments-external"
     spec:
       shareProcessNamespace: true
       containers:
