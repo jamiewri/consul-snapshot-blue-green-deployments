@@ -1,0 +1,56 @@
+worker_processes  3;
+pid /tmp/nginx.pid;
+error_log  /var/log/nginx/error.log;
+events {
+  worker_connections  10240;
+}
+http {
+    upstream http-backend {
+        {{- $internalEnabled := key "/internalEnabled" -}}
+        {{- if eq $internalEnabled "true" -}}
+          {{ range service "nginx-web" -}}
+              server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/internalWeight" }};
+          {{ end -}}
+        {{ end -}}
+  
+        {{- $externalEnabled := key "/externalEnabled" -}}
+        {{- if eq $externalEnabled "true" -}}
+          {{- range service "external-web-check" -}}
+            server {{ .Address }}:{{ .Port }}  weight={{ key "/externalWeight" }};
+          {{ end -}}
+        {{ end -}}
+   }
+
+
+
+server {
+    listen 9000;
+    location / {
+        proxy_pass http://http-backend;
+    }
+  }
+}
+stream {
+    upstream https-backend {
+        {{- $internalEnabled := key "/internalEnabled" -}}
+        {{- if eq $internalEnabled "true" -}}
+          {{ range service "nginx-service-https-customer1" -}}
+              server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/internalWeight" }};
+          {{ end -}}
+        {{ end -}}
+  
+        {{- $externalEnabled := key "/externalEnabled" -}}
+        {{- if eq $externalEnabled "true" -}}
+          {{- range service "external-web-check" -}}
+            server {{ .Address }}:{{ .Port }}  weight={{ key "/externalWeight" }};
+          {{ end -}}
+        {{ end -}}
+   }
+
+server {
+    listen 9443;
+    proxy_pass https-backend;
+  }
+}
+
+

@@ -31,6 +31,19 @@ EOF
     CONSUL_IP=$(kubectl get svc consul-server-external  -o json | jq -r '.status.loadBalancer.ingress[0].ip')
     echo "export CONSUL_HTTP_ADDR=http://${CONSUL_IP}:8500"
   ;;
+
+  dns-test)
+    kubectl apply -f ./apps/consul/deployment.dns-test.yaml
+  ;;
+
+  payments)
+    helm install -f ./apps/payments/values.yaml payments ./apps/payments --wait
+  ;;
+
+  payments-upgrade)
+    helm upgrade -f ./apps/payments/values.yaml payments ./apps/payments 
+  ;;
+
 esac
 
 

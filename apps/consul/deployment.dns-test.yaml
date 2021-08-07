@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-test
+
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      annotations:
+        "consul.hashicorp.com/connect-inject": "false"
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: web
+        image: busybox:1.28
+        command: ["sleep", "1000"]

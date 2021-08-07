@@ -1,5 +1,5 @@
 consul {
-  address = "consul.service.consul:8500"
+  address = "consul-consul-server:8500"
 
   retry {
     enabled  = true

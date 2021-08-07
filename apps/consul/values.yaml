@@ -11,6 +11,11 @@ global:
 server:
   replicas: 1
 
+syncCatalog:
+  enabled: true
+  toConsul: true
+  toK8S: false
+
 ui:
   service:
     type: LoadBalancer
@@ -29,15 +34,6 @@ ingressGateways:
   enabled: true
   defaults:
     replicas: 1
-    #affinity: null
-      #podAntiAffinity:
-      #  preferredDuringSchedulingIgnoredDuringExecution:
-      #    - labelSelector:
-      #        matchLabels:
-      #          app: {{ template "consul.name" . }}
-      #          release: "{{ .Release.Name }}"
-      #          component: ingress-gateway
-      #      topologyKey: kubernetes.io/hostname
 
   gateways:
     - name: ingress-gateway

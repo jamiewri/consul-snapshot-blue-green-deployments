@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-config-web
+  name: "{{ .Values.appName }}-nginx-config"
   namespace: "{{ .Values.namespace }}"
   annotations:
     "helm.sh/hook": pre-install
