@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Frontend Service</title>
+    <meta http-equiv="refresh" content="1" >
+  </head>
+  <style>
+    body {
+    {% if data.version == 1 %}
+      background-color: #03a1fc;
+    {% elif data.version == 2 %}
+      background-color: #2cdb5b;
+    {% elif data.version == 0 %}
+      background-color: #e63c1e;
+    {% endif %}
+    }
+  </style>
+  <body>
+     <div class="title">
+        <p>Payments API Version: {{ data.version }}</p>
+        <p>Served to you by {{ data.platform }}</p>
+     </div>
+  </body>
+</html>
+

@@ -10,9 +10,7 @@ spec:
   - name: "{{ .Values.appName }}"
     port: 80
     protocol: TCP
-    targetPort: 9000
+    targetPort: 5000
   selector:
     app: "{{ .Values.appName }}"
   type: LoadBalancer
-status:
-  loadBalancer: {}

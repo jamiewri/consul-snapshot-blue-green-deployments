@@ -7,5 +7,5 @@ spec:
   destination:
     name: payments
   sources:
-    - name: loadbalancer
+    - name: loadbalancer-external
       action: allow

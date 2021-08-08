@@ -1,0 +1,10 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: web-app
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: "{{ .Values.appName }}"
+

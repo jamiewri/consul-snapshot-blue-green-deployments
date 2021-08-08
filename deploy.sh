@@ -6,29 +6,12 @@ case $1 in
     kubectl create -f ./apps/consul/service.consul-dns-internal.yaml
     kubectl create -f ./apps/consul/service.consul-server-internal.yaml
     kubectl create -f ./apps/consul/service.consul-server-external.yaml
-    kubectl apply -f ./apps/consul/servicedefaults.payments.yaml
-    kubectl apply -f ./apps/consul/serviceintentions.loadbalancer.yaml
-    kubectl apply -f ./apps/consul/servicedefaults.loadbalancer.yaml
-
+    sh ./apps/consul/scripts/configure-kube-dns.sh
+    sh ./apps/consul/scripts/create-example-kv.sh
   ;;
 
   consul-upgrade)
      helm upgrade -f ./apps/consul/values.yaml consul hashicorp/consul
-  ;;
-
-  consul-dns)
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    addonmanager.kubernetes.io/mode: EnsureExists
-  name: kube-dns
-  namespace: kube-system
-data:
-  stubDomains: |
-    {"consul": ["$(kubectl get svc consul-dns -o jsonpath='{.spec.clusterIP}')"]}
-EOF
   ;;
 
   info)
@@ -48,8 +31,16 @@ EOF
     helm upgrade -f ./apps/payments/values.yaml payments ./apps/payments 
   ;;
 
+  upgrade-1)
+    helm upgrade -f ./apps/payments/values.yaml payments ./apps/payments --set deployment.tag=1 --reset-values
+  ;;
+
+  upgrade-2)
+    helm upgrade -f ./apps/payments/values.yaml payments ./apps/payments --set deployment.tag=2 --reset-values
+  ;;
+
   loadbalancer)
-     helm install -f ./apps/loadbalancer/values.yaml loadbalancer ./apps/loadbalancer --wait
+    helm install -f ./apps/loadbalancer/values.yaml loadbalancer ./apps/loadbalancer --wait
   ;;
 
   loadbalancer-upgrade)
@@ -61,6 +52,21 @@ EOF
     helm install -f ./apps/grafana/values.yaml grafana grafana/grafana --version "6.9.1" --wait
   ;;
 
+  all)
+    helm install -f ./apps/payments/values.yaml payments ./apps/payments --wait
+    helm install -f ./apps/loadbalancer/values.yaml loadbalancer ./apps/loadbalancer --wait
+    helm install -f ./apps/frontend/values.yaml frontend ./apps/frontend --wait
+    helm install -f ./apps/prometheus/values.yaml prometheus prometheus-community/prometheus --version "14.0.0" --wait
+    helm install -f ./apps/grafana/values.yaml grafana grafana/grafana --version "6.9.1" --wait
+  ;;
+
+  payments-blue)
+     helm install -f ./apps/payments-n/values.yaml payments-blue --set deployment.tag=1 --set appName=payments-blue ./apps/payments-n --wait
+  ;;
+
+  payments-green)
+     helm install -f ./apps/payments-n/values.yaml payments-green --set deployment.tag=2 --set appName=payments-green ./apps/payments-n --wait
+  ;;
 esac
 
 
