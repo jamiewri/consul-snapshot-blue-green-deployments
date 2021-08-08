@@ -18,8 +18,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.consul-config.yaml") . | sha256sum }}
         "consul.hashicorp.com/connect-inject": "true"
- #       "consul.hashicorp.com/transparent-proxy-exclude-inbound-ports": "9000"
-        "consul.hashicorp.com/connect-service": "loadbalancer-external"
+        "consul.hashicorp.com/connect-service": "loadbalancer"
     spec:
       shareProcessNamespace: true
       containers:

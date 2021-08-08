@@ -7,7 +7,3 @@ deployment:
   revisionHistoryLimit: 1
   image: jamiewri/payments
   tag: 1
-
-reloader:
-  image: jamiewri/nginx-reloader
-  tag: "v1"

@@ -13,14 +13,14 @@ http {
 
         {{ $blueEnabled := key "/payments/blueEnabled" -}}
         {{- if eq $blueEnabled "true" -}}
-          {{ range service "payments-blue-external" -}}
+          {{ range service "payments-blue" -}}
               server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/blueWeight" }};
           {{ end -}}
         {{ end -}}
 
         {{- $greenEnabled := key "/payments/greenEnabled" -}}
         {{- if eq $greenEnabled "true" -}}
-          {{ range service "payments-green-external" -}}
+          {{ range service "payments-green" -}}
               server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/greenWeight" }};
           {{ end -}}
         {{ end -}}
@@ -28,13 +28,13 @@ http {
     {{ end -}}
 
     {{- if eq $deploymentStrategy "blue" -}}
-          {{ range service "payments-blue-external" -}}
+          {{ range service "payments-blue" -}}
               server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/blueWeight" }};
           {{ end -}}
     {{ end -}}
 
     {{- if eq $deploymentStrategy "green" -}}
-          {{ range service "payments-green-external" -}}
+          {{ range service "payments-green" -}}
               server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/greenWeight" }};
           {{ end -}}
     {{ end -}}

@@ -2,10 +2,10 @@
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: loadbalancer
+  name: loadbalancer-payments-green
 spec:
   destination:
-    name: payments
+    name: payments-green
   sources:
-    - name: loadbalancer-external
+    - name: loadbalancer
       action: allow
