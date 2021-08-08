@@ -18,7 +18,7 @@ spec:
       annotations:
         "consul.hashicorp.com/connect-inject": "true"
         "consul.hashicorp.com/transparent-proxy-exclude-inbound-ports": "8080"
-        "consul.hashicorp.com/connect-service": "frontend-external"
+        "consul.hashicorp.com/connect-service": "frontend"
     spec:
       containers:
       - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
@@ -26,7 +26,7 @@ spec:
         name: frontend
         env:
         - name: BACKEND_URI
-          value: "http://loadbalancer-external.service.consul:9000"
+          value: "http://loadbalancer.service.consul:9000"
         ports:
         - containerPort: 8080
           protocol: TCP

@@ -3,7 +3,7 @@ namespace: default
 appName: payments
 
 deployment:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 1
   image: jamiewri/payments
   tag: 1

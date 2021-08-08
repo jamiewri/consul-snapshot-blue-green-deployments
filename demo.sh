@@ -73,6 +73,14 @@ case $1 in
      helm install -f ./apps/payments-n/values.yaml payments-blue --set deployment.tag=1 --set appName=payments-blue ./apps/payments-n --wait
   ;;
 
+  payments-green-upgrade)
+     helm upgrade -f ./apps/payments-n/values.yaml payments-green --set deployment.tag=2 --set appName=payments-green ./apps/payments-n --reset-values
+  ;;
+
+  payments-blue-upgrade)
+     helm upgrade -f ./apps/payments-n/values.yaml payments-blue --set deployment.tag=1 --set appName=payments-blue ./apps/payments-n --reset-values
+  ;;
+
   payments-green)
      helm install -f ./apps/payments-n/values.yaml payments-green --set deployment.tag=2 --set appName=payments-green ./apps/payments-n --wait
   ;;
