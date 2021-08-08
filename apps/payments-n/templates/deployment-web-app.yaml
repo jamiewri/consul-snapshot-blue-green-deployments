@@ -17,7 +17,7 @@ spec:
         app: "{{ .Values.appName }}"
       annotations:
         "consul.hashicorp.com/connect-inject": "true"
-        "consul.hashicorp.com/connect-service": "{{ .Values.appName }}-external"
+        "consul.hashicorp.com/connect-service": "{{ .Values.appName }}"
         "consul.hashicorp.com/service-tags": "{{ .Values.appName }},payments"
         "consul.hashicorp.com/service-meta-owner": "JamieWright"
     spec:
