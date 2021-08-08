@@ -6,4 +6,4 @@ deployment:
   replicas: 1
   revisionHistoryLimit: 1
   image: jamiewri/frontend
-  tag: 3.3
+  tag: 3.5
