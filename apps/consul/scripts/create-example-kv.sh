@@ -9,6 +9,6 @@ echo 'Adding KVs'
 consul kv put payments/
 consul kv put payments/blueEnabled true
 consul kv put payments/greenEnabled true
-consul kv put payments/blueWeight 100
-consul kv put payments/greenWeight 100
+consul kv put payments/blueWeight 1
+consul kv put payments/greenWeight 1
 consul kv put payments/deploymentStrategy none

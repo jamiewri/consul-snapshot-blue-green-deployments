@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: "{{ .Values.appName }}"
+        service: "payments"
       annotations:
         "consul.hashicorp.com/connect-inject": "true"
         "consul.hashicorp.com/transparent-proxy-exclude-inbound-ports": "8080"
