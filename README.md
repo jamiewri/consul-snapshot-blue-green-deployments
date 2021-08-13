@@ -24,9 +24,14 @@ sh demo.sh install payments-blue
 sh demo.sh install payments-green
 sh demo.sh install loadbalancer
 sh demo.sh install frontend
-
 ```
 
+## Screenshots
+Frontend unable to communicate with any payments service.
+![Screenshot](images/payments-error.png)
 
+Frontend communicating with the payments-blue service.
+![Screenshot](images/payments-blue.png)
 
-
+Frontend communicating with the payments-green service.
+![Screenshot](images/payments-green.png)
