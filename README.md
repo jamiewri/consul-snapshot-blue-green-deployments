@@ -2,6 +2,7 @@
 
 This repos deploys Consul and a app as show below.
 
+![Screenshot](images/architecture-diagram.png)
 
 ## Prerequisites
 - Working Kubernetes environment.
@@ -14,7 +15,7 @@ I'm using the `demo.sh` as a wrapper around some helm commands, to make the demo
 sh demo.sh install consul
 ```
 
-> :warning: **Wait for Consul to finish initalizing and for Consul services to have their IPs assigned before continuing**
+> :warning: **Wait for Consul to finish initalizing and for Consul services to have their IPs assigned before continuing!**
 
 ```
 sh demo.sh install consul-config
