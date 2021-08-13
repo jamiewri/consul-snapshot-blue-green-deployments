@@ -27,6 +27,9 @@ sh demo.sh install frontend
 ```
 
 ## Screenshots
+Consul dashboard.
+![Screenshot](images/consul-dashboard.png)
+
 Frontend unable to communicate with any payments service.
 ![Screenshot](images/payments-error.png)
 
