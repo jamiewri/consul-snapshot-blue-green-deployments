@@ -1,5 +1,0 @@
-apiVersion: v1
-description: Payments app chart
-name: payments-app
-version: 0.0.1
-appVersion: 1.7.9
