@@ -1,4 +1,4 @@
-adminUser: jamie
+adminUser: hashiadmin
 adminPassword: hashi123
 
 rbac:
@@ -37,28 +37,3 @@ datasources:
         jsonData:
           timeInterval: 5s
         editable: true
-
-#sidecar:
-#  dashboards:
-#    enabled: true
-
-#dashboardProviders:
-#  dashboardproviders.yaml:
-#    apiVersion: 1
-#    providers:
-#    - name: 'default'
-#      orgId: 1
-#      folder: ''
-#      type: file
-#      disableDeletion: false
-#      editable: true
-#      options:
-#        path: /var/lib/grafana/dashboards/default
-#
-#
-#dashboards:
-#  default:
-#    hashicups-dashboard:
-#      file: dashboards/hashicups-dashboard.json
-    #consul-server-monitoring_rev3:
-    #  file: "dashboards/consul-server-monitoring_rev3.json"
