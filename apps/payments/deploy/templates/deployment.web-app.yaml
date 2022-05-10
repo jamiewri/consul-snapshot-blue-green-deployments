@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}"
+  namespace: "{{ .Values.namespace }}"
+  labels:
+    app: "{{ .Values.appName }}"
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.appName }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.appName }}"
+        service: "payments"
+      annotations:
+        "consul.hashicorp.com/connect-inject": "true"
+        "consul.hashicorp.com/connect-service": "{{ .Values.appName }}"
+        "consul.hashicorp.com/service-tags": "{{ .Values.appName }},payments"
+        "consul.hashicorp.com/service-meta-owner": "JamieWright"
+    spec:
+      shareProcessNamespace: true
+      containers:
+      - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+      serviceAccountName: "{{ .Values.appName }}"

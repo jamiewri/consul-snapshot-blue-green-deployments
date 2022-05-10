@@ -1,0 +1,11 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: loadbalancer-payments-blue
+spec:
+  destination:
+    name: payments-blue
+  sources:
+    - name: loadbalancer
+      action: allow

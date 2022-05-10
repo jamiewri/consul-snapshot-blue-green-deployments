@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.appName }}-consul-config"
+  namespace: "{{ .Values.namespace }}"
+  annotations:
+    "helm.sh/hook": pre-install
+data:
+{{ (.Files.Glob "files/*").AsConfig | indent 2 }}

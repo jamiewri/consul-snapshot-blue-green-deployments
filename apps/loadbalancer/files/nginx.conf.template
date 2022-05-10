@@ -1,0 +1,51 @@
+worker_processes  3;
+pid /tmp/nginx.pid;
+error_log  /var/log/nginx/error.log debug;
+events {
+  worker_connections  10240;
+}
+
+http {
+    upstream http-backend {
+    {{ $deploymentStrategy := key "/payments/deploymentStrategy" -}}
+    {{- if eq $deploymentStrategy "none" -}}
+
+
+        {{ $blueEnabled := key "/payments/blueEnabled" -}}
+        {{- if eq $blueEnabled "true" -}}
+          {{ range service "payments-blue" -}}
+              server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/blueWeight" }};
+          {{ end -}}
+        {{ end -}}
+
+        {{- $greenEnabled := key "/payments/greenEnabled" -}}
+        {{- if eq $greenEnabled "true" -}}
+          {{ range service "payments-green" -}}
+              server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/greenWeight" }};
+          {{ end -}}
+        {{ end -}}
+
+    {{ end -}}
+
+    {{- if eq $deploymentStrategy "blue" -}}
+          {{ range service "payments-blue" -}}
+              server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/blueWeight" }};
+          {{ end -}}
+    {{ end -}}
+
+    {{- if eq $deploymentStrategy "green" -}}
+          {{ range service "payments-green" -}}
+              server {{ .Address }}:{{ .Port }} max_fails=1 fail_timeout=10s weight={{ key "/payments/greenWeight" }};
+          {{ end -}}
+    {{ end -}}
+    }
+
+    server {
+        listen 9000;
+        location / {
+            proxy_pass http://http-backend;
+        }
+    }
+}
+
+

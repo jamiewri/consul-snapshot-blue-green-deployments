@@ -1,0 +1,45 @@
+global:
+  enabled: true
+  image: "jamiewri/consul-python:1.10.1"
+  name: consul
+  datacenter: devopstower
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: "1m"
+
+server:
+  replicas: 1
+
+#syncCatalog:
+#  enabled: true
+#  toConsul: true
+#  toK8S: false
+
+ui:
+  service:
+    type: LoadBalancer
+
+dns:
+  enabled: true
+
+connectInject:
+  enabled: true
+  default: true
+
+controller:
+  enabled: true
+
+#ingressGateways:
+#  enabled: true
+#  defaults:
+#    replicas: 1
+#
+#  gateways:
+#    - name: ingress-gateway
+#      service:
+#        type: LoadBalancer
+#        ports:
+#          - port: 5000
+
+

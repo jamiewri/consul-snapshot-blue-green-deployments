@@ -1,0 +1,9 @@
+namespace: default
+
+appName: frontend
+
+deployment:
+  replicas: 1
+  revisionHistoryLimit: 1
+  image: jamiewri/frontend
+  tag: 3.5

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.appName }}"
+  namespace: "{{ .Values.namespace }}"
+  labels:
+    app: "{{ .Values.appName }}"
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.appName }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.appName }}"
+        service: "payments"
+      annotations:
+        "consul.hashicorp.com/connect-inject": "true"
+        "consul.hashicorp.com/transparent-proxy-exclude-inbound-ports": "8080"
+        "consul.hashicorp.com/connect-service": "frontend"
+    spec:
+      containers:
+      - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+        imagePullPolicy: IfNotPresent
+        name: frontend
+        env:
+        - name: BACKEND_URI
+          value: "http://loadbalancer.service.consul:9000"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      serviceAccountName: "{{ .Values.appName }}"

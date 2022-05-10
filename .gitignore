@@ -1,0 +1,19 @@
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+*.terraform.lock.hcl
+.DS_Store
+**/.DS_Store
+
+
+# logs
+*.log
+
+# Directories
+.terraform/
+.vagrant/
+
+**/.terraform/
+**/.vagrant/
+**/.terraform.lock.hcl
+
